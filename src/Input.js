@@ -18,6 +18,7 @@ class Input extends React.Component {
           placeholder={ this.props.options.placeholder }
           onChange={ this.dataSearch }
           value={ this.props.options.term }
+          disabled={ this.props.options.disabled }
         />
       </div>
     );

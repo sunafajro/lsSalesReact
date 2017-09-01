@@ -15,7 +15,9 @@ class Select extends React.Component {
         <select
           className="form-control input-sm"
           onChange={this.dataSearch}
-          value={ this.props.options.term }>
+          value={ this.props.options.term }
+          disabled={ this.props.options.disabled}
+        >
           { this.props.filter.map(item =>
             <option key={ item.key } value={ item.key }>
               { item.value }

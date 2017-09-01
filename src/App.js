@@ -148,9 +148,9 @@ class Sales extends React.Component {
               :
               <div className="row row-offcanvas row-offcanvas-left schedule-index">
                 <SideBar
-                  create={ this.createSale }
+                  refresh={ this.getData }
                   filter={ this.handleFilter }
-                  show={ this.state.showCreateButton }
+                  create={ this.state.showCreateButton }
                   values={{ name: this.state.name, type: this.state.type }}
                   types={ this.state.typeList }
                   update={ this.updateFilterValue }

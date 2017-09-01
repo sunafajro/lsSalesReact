@@ -4,8 +4,18 @@ import UserBlock from './UserBlock';
 import Filter from './Filter';
 import Input from './Input';
 import Select from './Select';
+import CreateSale from './CreateSale';
 
 class SideBar extends React.Component {
+  state = {
+    isOpen: false
+  }
+
+  closeModal = () => {
+    this.setState({
+      isOpen: false
+    });
+  }
 
   render () {
   	return (
@@ -19,7 +29,7 @@ class SideBar extends React.Component {
         { this.props.create ? 
           <button
             className="btn btn-success btn-sm btn-block"
-            onClick={ e => this.props.create() }
+            onClick={ e => this.setState({ isOpen: true }) }
           >
             <i className="fa fa-plus" aria-hidden="true"></i> Добавить
           </button>
@@ -32,7 +42,8 @@ class SideBar extends React.Component {
             term: this.props.values.name,
             name: 'name',
             validation: 'form-group',
-            placeholder: 'Введите название...'
+            placeholder: 'Введите название...',
+            disabled: false
           }}
           update={ this.props.update }
         />
@@ -40,21 +51,28 @@ class SideBar extends React.Component {
           options={{
             term: this.props.values.type,
             name: 'type',
-            validation: 'form-group'
+            validation: 'form-group',
+            disabled: false
           }}
           update={ this.props.update }
           filter={ this.props.types }
         />
         <Filter click={this.props.filter} />
+        <CreateSale
+          open={ this.state.isOpen }
+          close={ this.closeModal }
+          refresh={ this.props.refresh }
+          types={ this.props.types }
+        />
   	  </div>
   	);
   }
 }
 
 SideBar.propTypes = {  
-  create: PropTypes.func.isRequired,
+  refresh: PropTypes.func.isRequired,
   filter: PropTypes.func.isRequired,
-  show: PropTypes.bool.isRequired,
+  create: PropTypes.bool.isRequired,
   values: PropTypes.object.isRequired,
   types: PropTypes.array.isRequired,
   user: PropTypes.object.isRequired,
