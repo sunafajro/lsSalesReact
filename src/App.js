@@ -45,13 +45,11 @@ class Sales extends React.Component {
       body
     })
     .then(response => {
-      /* проверяем на наличии 200 кода в ответе */
-      if (!response.ok) {
-        throw Error(response.statusText);
-        return response;
-      } else {
+      if (response.ok) {
         return response.json();
       }
+      let r = response.json();
+      throw new Error(r.message);
     })
     .then(json => {
       /* при успешном ответе, раскидываем данные в состояние */
@@ -78,32 +76,17 @@ class Sales extends React.Component {
       if (getAll) {
         this.setState({
           fetchingAllError: true,
-          fetchingAllErrText: err,
+          fetchingAllErrText: err.message,
           fetchingAll: false
         });
       } else {
         this.setState({
           fetchingContentError: true,
-          fetchingContentErrText: err,
+          fetchingContentErrText: err.message,
           fetchingContent: false
         });
       }
     });
-  }
-
-  /* создает новую скидку */
-  createSale = () => {
-
-  }
-
-  /* редактирует скидку по id */
-  updateSale = (id) => {
-
-  }
-
-  /* удаляет скидку по id */
-  deleteSale = (id) => {
-
   }
 
   /* обновлет значения фильтров при вводе */
@@ -116,7 +99,7 @@ class Sales extends React.Component {
     switch (action) {
       case 'apply':
         this.getData({
-          formData: {
+          Sale: {
             name: this.state.name !== '' ? this.state.name : null,
             type: this.state.type !== 'all' ? this.state.type : null
           }
@@ -128,7 +111,7 @@ class Sales extends React.Component {
           type: 'all'
         });
         this.getData({
-          formData: {
+          Sale: {
             name: null,
             type: null
           }
@@ -171,8 +154,7 @@ class Sales extends React.Component {
                         header={ this.state.tableHeader }
                         data={ this.state.tableData }
                         actions={ this.state.tableActions }
-                        update={ this.updateSale }
-                        delete={ this.deleteSale }
+                        refresh={ this.getData }
                       />
                 }
               </div>

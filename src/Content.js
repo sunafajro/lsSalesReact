@@ -4,18 +4,73 @@ import Table from './Table';
 
 class Content extends React.Component {
 
+  updateSale = (sale) => {
+    
+  }
+
+  sendDelete = (id) => {
+    const body = JSON.stringify({
+      Sale: {
+        id: id
+      }
+    });
+
+    fetch('/sale/delete', {
+      method: 'POST',
+      accept: 'application/json',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      }
+      let r = response.json();
+      throw new Error(r.message);
+    })
+    .then(json => {
+      /* передаем услугу в родительское состояние */
+      //this.props.alert(json.code, json.message);
+      this.props.refresh({
+          Sale: {
+            name: null,
+            type: null
+          }
+        }, false);
+      console.log(json.message);
+    })
+    .catch(err => {
+      /* передаем услугу в родительское состояние */
+      /* this.props.alert(500, err.message); */
+      console.log(err.message);
+    });
+  }
+
+  deleteSale = (id) => {
+    this.sendDelete(id);
+    this.props.refresh({
+      Sale: {
+        name: null,
+        type: null
+      }
+    }, false);
+  }
+
   render () {
   	return (
   		<div id="content" className="col-sm-10">
-		<p className="pull-left visible-xs">
-			<button type="button" className="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
-		</p>
+    		<p className="pull-left visible-xs">
+    			<button type="button" className="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
+    		</p>
           <Table
             header={ this.props.header }
             data={ this.props.data }
             actions={ this.props.actions }
-            update={ this.props.update }
-            delete={ this.props.delete }
+            update={ this.updateSale }
+            delete={ this.deleteSale }
           />
   		</div>
   	);
@@ -26,8 +81,7 @@ Content.propTypes = {
   header: PropTypes.array.isRequired,
   data: PropTypes.array.isRequired,
   actions: PropTypes.bool.isRequired,
-  update: PropTypes.func.isRequired,
-  delete: PropTypes.func.isRequired
+  refresh: PropTypes.func.isRequired
 }
 
 export default Content;

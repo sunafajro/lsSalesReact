@@ -3,6 +3,12 @@ import PropTypes from 'prop-types';
 
 class Table extends React.Component {
 
+  handleDelete = (id) => {
+    if(confirm('Вы уверены?')) {
+      this.props.delete(id)
+    }
+  }
+
   render() {
     return (
       <table className="table table-hover table-stripped table-bordered small">
@@ -39,7 +45,7 @@ class Table extends React.Component {
                     </button>
                     <button
                       className="btn btn-danger btn-xs"
-                      onClick={ e => this.props.delete(item.id) }
+                      onClick={ e => this.handleDelete(item.id) }
                     >
                       <i className="fa fa-trash" />
                     </button>

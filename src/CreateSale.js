@@ -16,9 +16,7 @@ class CreateSale extends React.Component {
 		super(props);
 	  this.state = {
 	    sending: false,
-	  	serverError: false,
-	  	clientError: false,
-      errorCode: '',
+	  	error: false,
       errorMessage: '',
 	  	data: {
 	  		name: '',
@@ -93,29 +91,30 @@ class CreateSale extends React.Component {
       },
       body
     })
-    .then(response => response.json())
+    .then(response => {
+  	  if (response.ok) {
+  	  	return response.json();
+  	  }
+      let r = response.json();
+  	  throw new Error(r.message);
+    })
     .then(json => {
-      if(json.code === 200) {
-        /* передаем услугу в родительское состояние */
-        //this.props.alert(json.code, json.message);
-        this.setState({ sending: false });
-        this.handleClose();
-        this.props.refresh();
-      } else {
-        this.setState({
-        	sending: false,
-          serverError: true,
-          errorCode: json.code,
-          errorMessage: json.message
-        });
-      }
+      /* передаем услугу в родительское состояние */
+      //this.props.alert(json.code, json.message);
+      this.setState({ sending: false });
+      this.handleClose();
+      this.props.refresh({
+          Sale: {
+            name: null,
+            type: null
+          }
+        }, false);
     })
     .catch(err => {
       this.setState({
       	sending: false,
-        clientError: true,
-        errorCode: 'Ошибка!',
-        errorMessage: 'Не удалось создать услугу.'
+        error: true,
+        errorMessage: err.message
       });
     });
   }
@@ -126,8 +125,7 @@ class CreateSale extends React.Component {
       this.sendData();
     } else {
     	this.setState({
-    		clientError: true,
-        errorCode: 'Ошибка!',
+    		error: true,
         errorMessage: 'Поля формы должны быть заполнены.'
     	});
     }
@@ -171,12 +169,8 @@ class CreateSale extends React.Component {
               }}
             update={ this.updateState }
           />
-          { this.state.serverError ?
-            <div className="alert alert-danger"><b>{ this.state.errorCode }</b> { this.state.errorMessage }</div>
-            : ''
-          }
-          { this.state.clientError ?
-            <div className="alert alert-danger"><b>{ this.state.errorCode }</b> { this.state.errorMessage }</div>
+          { this.state.error ?
+            <div className="alert alert-danger"><b>Ошибка!</b> { this.state.errorMessage }</div>
             : ''
           }
 		    </ModalBody>
