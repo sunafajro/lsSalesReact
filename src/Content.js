@@ -1,13 +1,37 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Table from './Table';
+import UpdateSale from './UpdateSale';
 
 class Content extends React.Component {
-
-  updateSale = (sale) => {
-    
+  state = {
+    isOpen: false,
+    sale: {
+      id: '',
+      name: ''
+    }
   }
 
+  /* закрывает модальное окно */
+  closeModal = () => {
+    this.setState({
+      isOpen: false
+    });
+  }
+
+  /* заполняет данные скидки в состояние и открывает модальное окно */
+  updateSale = (sale) => {
+    let updatedSale = { ...this.state.sale }
+    updatedSale.id = sale.id;
+    updatedSale.name = sale.name;
+
+    this.setState({
+      isOpen: true,
+      sale: updatedSale
+    });
+  }
+
+  /* отправляет на сервер запрос на удаление скидки */
   sendDelete = (id) => {
     const body = JSON.stringify({
       Sale: {
@@ -71,6 +95,12 @@ class Content extends React.Component {
             actions={ this.props.actions }
             update={ this.updateSale }
             delete={ this.deleteSale }
+          />
+          <UpdateSale
+            open={ this.state.isOpen }
+            close={ this.closeModal }
+            sale={ this.state.sale }
+            refresh={ this.props.refresh }
           />
   		</div>
   	);

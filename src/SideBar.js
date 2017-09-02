@@ -11,6 +11,7 @@ class SideBar extends React.Component {
     isOpen: false
   }
 
+  /* закрывает модальное окно */
   closeModal = () => {
     this.setState({
       isOpen: false
