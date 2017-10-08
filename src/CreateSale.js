@@ -21,12 +21,14 @@ class CreateSale extends React.Component {
 	  	data: {
 	  		name: '',
 	  		type: '',
-	  		value: ''
+	  		value: '',
+        base: '0'
 	  	},
 	    validation: {
 	      name: 'form-group',
 	      type: 'form-group',
-	      value: 'form-group'
+	      value: 'form-group',
+        base: 'form-group'
 	    }
 	  }
 
@@ -36,8 +38,14 @@ class CreateSale extends React.Component {
   updateState = (name, value) => {
     let data = { ...this.state.data };
     let validation = { ...this.state.validation };
-    data[name] = value;
-    validation[name] = ((value !== '' && value !== 'all') ? 'form-group has-success' : 'form-group has-error');
+    
+    if (name !== 'value') {
+      data[name] = value;
+      validation[name] = ((value !== '' && value !== 'all') ? 'form-group has-success' : 'form-group has-error');
+    } else {
+      data[name] = parseFloat(value) >=0 ? parseFloat(value).toFixed(2) : '0.00';
+      validation[name] = ((value !== '') ? 'form-group has-success' : 'form-group has-error');
+    }   
 
     this.setState({
       data,
@@ -169,6 +177,17 @@ class CreateSale extends React.Component {
               }}
             update={ this.updateState }
           />
+          { this.state.data.type === '2' ?
+              <Input
+                options={{
+                  placeholder: 'Введите сумму...', 
+                  term: this.state.data.base, 
+                  name: 'base',
+                  validation: this.state.validation.base,
+                  disabled: this.state.sending,
+                }}
+                update={ this.updateState }
+              /> : '' }
           { this.state.error ?
             <div className="alert alert-danger"><b>Ошибка!</b> { this.state.errorMessage }</div>
             : ''
