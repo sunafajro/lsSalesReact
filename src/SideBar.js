@@ -34,9 +34,8 @@ class SideBar extends React.Component {
           >
             <i className="fa fa-plus" aria-hidden="true"></i> Добавить
           </button>
-          :
-          ''
-        }
+          : '' }
+        <a href="/salestud/index" className="btn btn-info btn-block">Подтвердить скидки</a>
         <h4>Фильтры</h4>
         <Input
           options={{
